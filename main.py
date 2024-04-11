@@ -30,9 +30,9 @@ class Manager(ttk.Frame):
         self.user_records= ''
         self.password_records = ''
 
+        self.create_database()
         self.show_records()
         self.widgets()
-        self.create_database()
         
 
     def widgets(self):
@@ -182,18 +182,18 @@ class Manager(ttk.Frame):
 
 
     def create_database(self):
-        if sqlite3.connect('entrys.db'):
-            pass
-        else:
+        try:
             connection = sqlite3.connect('entrys.db')
             cursor = connection.cursor()
-            cursor.execute("""CREATE TABLE entrys(
+            cursor.execute("""CREATE TABLE IF NOT EXISTS entrys(
                             ip TEXT,
                             user TEXT,
                             password TEXT
                         )""")
             connection.commit()
             connection.close()
+        except sqlite3.Error as e:
+            print("Error creating database:", e)
 
 
     def add_window(self):
